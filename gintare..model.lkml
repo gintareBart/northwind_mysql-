@@ -1,21 +1,190 @@
-connection: "northwind_mysql"
+connection: "mysql-formula1"
 
-include: "*.view.lkml"         # include all views in this project
-include: "*.dashboard.lookml"  # include all dashboards in this project
+# include all the views
+include: "*.view"
 
-explore:  customers{}
+# include all the dashboards
+include: "*.dashboard"
 
-# # Select the views that should be a part of this model,
-# # and define the joins that connect them together.
-#
-# explore: order_items {
-#   join: orders {
-#     relationship: many_to_one
-#     sql_on: ${orders.id} = ${order_items.order_id} ;;
-#   }
-#
-#   join: users {
-#     relationship: many_to_one
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-# }
+datagroup: gintare_1_default_datagroup {
+  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  max_cache_age: "1 hour"
+}
+
+persist_with: gintare_1_default_datagroup
+
+explore: circuits {}
+
+explore: constructor_results {
+  join: constructors {
+    type: left_outer
+    sql_on: ${constructor_results.constructor_id} = ${constructors.constructor_id} ;;
+    relationship: many_to_one
+  }
+
+  join: races {
+    type: left_outer
+    sql_on: ${constructor_results.race_id} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: constructor_standings {
+  join: races {
+    type: left_outer
+    sql_on: ${constructor_standings.race_id} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: constructors {
+    type: left_outer
+    sql_on: ${constructor_standings.constructor_id} = ${constructors.constructor_id} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: constructors {}
+
+explore: driver_standings {
+  join: races {
+    type: left_outer
+    sql_on: ${driver_standings.race_id} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: drivers {
+    type: left_outer
+    sql_on: ${driver_standings.driver_id} = ${drivers.driver_id} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: drivers {}
+
+explore: lap_times {
+  join: drivers {
+    type: left_outer
+    sql_on: ${lap_times.driver_id} = ${drivers.driver_id} ;;
+    relationship: many_to_one
+  }
+
+  join: races {
+    type: left_outer
+    sql_on: ${lap_times.race_id} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: pit_stops {
+  join: drivers {
+    type: left_outer
+    sql_on: ${pit_stops.driver_id} = ${drivers.driver_id} ;;
+    relationship: many_to_one
+  }
+
+  join: races {
+    type: left_outer
+    sql_on: ${pit_stops.race_id} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: qualifying {
+  join: constructors {
+    type: left_outer
+    sql_on: ${qualifying.constructorid} = ${constructors.constructor_id} ;;
+    relationship: many_to_one
+  }
+
+  join: drivers {
+    type: left_outer
+    sql_on: ${qualifying.driverid} = ${drivers.driver_id} ;;
+    relationship: many_to_one
+  }
+
+  join: races {
+    type: left_outer
+    sql_on: ${qualifying.raceid} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: races {
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: results {
+  join: status {
+    type: left_outer
+    sql_on: ${results.status_id} = ${status.status_id} ;;
+    relationship: many_to_one
+  }
+
+  join: races {
+    type: left_outer
+    sql_on: ${results.race_id} = ${races.raceid} ;;
+    relationship: many_to_one
+  }
+
+  join: drivers {
+    type: left_outer
+    sql_on: ${results.driver_id} = ${drivers.driver_id} ;;
+    relationship: many_to_one
+  }
+
+  join: constructors {
+    type: left_outer
+    sql_on: ${results.constructor_id} = ${constructors.constructor_id} ;;
+    relationship: many_to_one
+  }
+
+  join: circuits {
+    type: left_outer
+    sql_on: ${races.circuitid} = ${circuits.circuit_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: seasons {}
+
+explore: status {}
