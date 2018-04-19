@@ -3,7 +3,7 @@ view: customers {
  dimension: customer_id{
    description: "Unique"
   type: number
-  sql: ${TABLE}.customer_id ;;
+  sql: ${TABLE}.id ;;
  }
   # # Define your dimensions and measures here, like this:
   # dimension: user_id {
